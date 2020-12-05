@@ -2,7 +2,7 @@
 
 Install [Racket](https://download.racket-lang.org/) and make its binaries
 available on your `PATH`, e.g. on macOS:
-```bash
+```
 # one time
 $ cd /Applications && ln -s "Racket v7.9" Racket
 # in your .bashrc
@@ -10,12 +10,12 @@ export PATH=/Applications/Racket/bin:$PATH
 ```
 
 Install `monitor.rkt`'s dependencies with `raco`:
-```bash
+```
 $ raco pkg install control http-easy nested-hash
 ```
 
 Compile into a standalone `monitor` executable:
-```bash
+```
 $ raco exe --orig-exe monitor.rkt
 $ ./monitor --chat-id "12345" \
             --telegram-key "12345:abcd" \
@@ -24,7 +24,7 @@ $ ./monitor --chat-id "12345" \
 ```
 
 Or run it via `racket`:
-```bash
+```
 $ racket monitor.rkt --chat-id "12345" \
                      --telegram-key "12345:abcd" \
                      --forever \
@@ -32,7 +32,7 @@ $ racket monitor.rkt --chat-id "12345" \
 ```
 
 It includes `--help` output:
-```bash
+```
 $ ./monitor --help
 monitor [ <option> ... ] [<validators>] ...
   for <validators> supply one or more validator indices separated by spaces
