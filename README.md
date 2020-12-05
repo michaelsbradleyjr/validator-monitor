@@ -1,0 +1,35 @@
+# How to use it?
+
+Install [Racket](https://download.racket-lang.org/) and make its binaries
+available on your `PATH`, e.g. on macOS:
+```bash
+# one time
+$ cd /Applications && ln -s "Racket v7.9" Racket
+# in your .bashrc
+export PATH=/Applications/Racket/bin:$PATH
+```
+
+Install `monitor.rkt`'s dependencies with `raco`:
+```bash
+$ raco pkg install http-easy nested-hash
+```
+
+Compile into a standalone `monitor` executable:
+```bash
+$ raco exe --orig-exe monitor.rkt
+$ ./monitor --chat-id "12345" \
+            --telegram-key "12345:abcd" \
+            987 654 321
+```
+
+Or run it via `racket`:
+```bash
+$ racket monitor.rkt --chat-id "12345" \
+                     --telegram-key "12345:abcd" \
+                     987 654 321
+```
+
+It includes `--help` output:
+```bash
+$ ./monitor --help
+```
