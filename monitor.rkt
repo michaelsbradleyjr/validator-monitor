@@ -1,6 +1,7 @@
 #lang racket/base
 
-(require nested-hash
+(require control
+         nested-hash
          net/http-easy
          racket/cmdline
          racket/date
@@ -20,9 +21,9 @@
     (foldr (λ (att result)
              (if (and (equal? (hash-ref att 'epoch) epoch)
                       (not (equal? (hash-ref att 'status) 1)))
-                   (cons (cons (hash-ref att 'validatorindex)
-                               (hash-ref att 'attesterslot))
-                         result)
+                 (cons (cons (hash-ref att 'validatorindex)
+                             (hash-ref att 'attesterslot))
+                       result)
                  result))
            '()
            attestations)))
@@ -35,9 +36,9 @@
     (foldr (λ (pro result)
              (if (and (equal? (hash-ref pro 'epoch) epoch)
                       (not (equal? (hash-ref pro 'status) "1")))
-                   (cons (cons (hash-ref pro 'proposer)
-                               (hash-ref pro 'slot))
-                         result)
+                 (cons (cons (hash-ref pro 'proposer)
+                             (hash-ref pro 'slot))
+                       result)
                  result))
            '()
            proposals)))
@@ -69,15 +70,36 @@
   (for-each (λ (pair) (send pair failed-message))
             (get-failed-proposals epoch validators))))
 
-(define cli-chat-id (make-parameter ""))
-(define cli-telegram-key (make-parameter ""))
+(define chat-id (make-parameter ""))
+(define telegram-key (make-parameter ""))
+(define forever (make-parameter #f))
 
 (command-line
    #:program "monitor"
+   #:usage-help "for <validators> supply one or more validator indices separated by spaces"
    #:once-each
-   [("--chat-id") cid "id of the telegram chat between yourself and your bot"
-                       (cli-chat-id cid)]
-   [("--telegram-key") tkey "api key for your telegram bot"
-                       (cli-telegram-key tkey)]
+   [("--chat-id") id ; takes one argument
+                  "(required) id of telegram chat between yourself and your bot"
+                  (chat-id id)]
+   [("--telegram-key") key ; takes one argument
+                       "(required) api key for your telegram bot"
+                       (telegram-key key)]
+   [("--forever") "monitor every 6 minutes indefinitely"
+                  (forever #t)]
    #:args validators ; one or more validator indices separated by spaces
-   (monitor validators (cli-chat-id) (cli-telegram-key)))
+   (cond
+    [(equal? (chat-id) "")
+     (error "Error: --chat-id was not supplied or was empty")]
+    [(equal? (telegram-key) "")
+     (error "Error: --telegram-key was not supplied or was empty")]
+    [(equal? validators '())
+     (error "Error: at least one validator index must be supplied")])
+   (let ([run-monitor (λ () (monitor validators (chat-id) (telegram-key)))])
+     (if (forever)
+         (while #t ; run indefinitely
+           ; any exceptions that represent errors will be caught and displayed
+           ; then the while loop will continue to run
+           (with-handlers ([exn:fail? (λ (v) (displayln v))])
+             (run-monitor))
+           (sleep 360)) ; sleep for 6 minutes before running monitor again
+         (run-monitor))))
