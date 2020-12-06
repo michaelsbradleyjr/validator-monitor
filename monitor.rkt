@@ -111,10 +111,10 @@
   [(equal? validators '())
    (error "Error: at least one validator index must be supplied")])
  (let ([run-monitor (λ () (monitor validators (chat-id) (telegram-key)))])
+   (when (line-buffering) (file-stream-buffer-mode (current-output-port) 'line))
    (displayln (format "~a: ~a"
                       (date->string (current-date) #t)
                       "Starting monitor"))
-   (when (line-buffering) (file-stream-buffer-mode (current-output-port) 'line))
    (if (forever)
        (let loop () ; run indefinitely
          ; any exceptions that represent errors will be caught and displayed
