@@ -135,9 +135,10 @@
                       "Starting monitor"))
    (if (forever)
        (let loop () ; run indefinitely
-         ; any exceptions that represent errors will be caught and displayed
-         ; then the loop will continue to run
-         (with-handlers ([exn:fail? (λ (v) (displayln v))]) (run-monitor))
+         (thread ; run monitor in a separate thread to minimize timer drift
+          ; any exceptions that represent errors will be caught and displayed
+          ; then the loop will continue to run
+          (λ () (with-handlers ([exn:fail? (λ (v) (displayln v))]) (run-monitor))))
          (sleep 360) ; sleep for 6 minutes before running monitor again
          (loop))
        (begin
