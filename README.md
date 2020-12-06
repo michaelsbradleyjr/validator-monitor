@@ -33,7 +33,7 @@ Compile into a standalone `monitor` executable:
 ```
 $ raco exe --orig-exe monitor.rkt
 $ ./monitor --chat-id "12345" \
-            --telegram-key "12345:abcd" \
+            --telegram-key "11111:abcd" \
             --forever \
             987 654 321
 ```
@@ -41,7 +41,7 @@ $ ./monitor --chat-id "12345" \
 Or run it via `racket`:
 ```
 $ racket monitor.rkt --chat-id "12345" \
-                     --telegram-key "12345:abcd" \
+                     --telegram-key "11111:abcd" \
                      --forever \
                      987 654 321
 ```
@@ -71,7 +71,7 @@ Description=ETH2 Beacon Chain validator monitor
 [Service]
 ExecStart=/home/michael/repos/validator-monitor/monitor \
   --chat-id "12345" \
-  --telegram-key "12345:abcd" \
+  --telegram-key "11111:abcd" \
   --forever \
   987 654 321
 User=michael
