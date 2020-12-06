@@ -75,13 +75,17 @@
                                       (date->string (current-date) #t)
                                       message))
                    (telegram-send message chat-id telegram-key)))])
-    (when (or (not (equal? missed-attestations '()))
-              (not (equal? failed-proposals '())))
+    (if (or (not (equal? missed-attestations '()))
+            (not (equal? failed-proposals '())))
+      (begin
+       (displayln (format "~a: ~a"
+                          (date->string (current-date) #t)
+                          "Sending telegram messages"))
+       (for-each (λ (pair) (send pair missed-message)) missed-attestations)
+       (for-each (λ (pair) (send pair failed-message)) failed-proposals))
       (displayln (format "~a: ~a"
                          (date->string (current-date) #t)
-                         "Sending telegram messages"))
-      (for-each (λ (pair) (send pair missed-message)) missed-attestations)
-      (for-each (λ (pair) (send pair failed-message)) failed-proposals))))
+                         "Nothing to report")))))
 
 (define chat-id (make-parameter ""))
 (define telegram-key (make-parameter ""))
