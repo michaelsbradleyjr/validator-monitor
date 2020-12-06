@@ -91,8 +91,8 @@ $ systemctl status validator-monitor
 ## Telegram bot setup
 
 In the Telegram app, create a new bot by sending the `/newbot` command to
-*@BotFather*. Provide a name and username for your bot and you'll receive a
-token to access the API.
+*@BotFather*. Provide a name and username for your bot and you'll receive a key
+to access the API.
 
 Send a message to your bot in Telegram, and then run this command in a terminal:
 ```
