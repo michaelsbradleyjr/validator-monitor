@@ -13,7 +13,7 @@ available on your `PATH`, e.g. on macOS:
 # one time
 $ cd /Applications && ln -s "Racket v7.9" Racket
 # in your .bashrc
-export PATH=/Applications/Racket/bin:$PATH
+export PATH="/Applications/Racket/bin:${PATH}"
 ```
 
 There's a [PPA](https://launchpad.net/~plt/+archive/ubuntu/racket) available if
