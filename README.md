@@ -9,6 +9,14 @@ $ cd /Applications && ln -s "Racket v7.9" Racket
 export PATH=/Applications/Racket/bin:$PATH
 ```
 
+There's a [PPA](https://launchpad.net/~plt/+archive/ubuntu/racket) available if
+you're running Ubuntu:
+```
+$ sudo add-apt-repository ppa:plt/racket
+$ sudo apt-get update
+$ sudo apt-get install racket
+```
+
 Install `monitor.rkt`'s dependencies with `raco`:
 ```
 $ raco pkg install control http-easy nested-hash
@@ -44,4 +52,25 @@ monitor [ <option> ... ] [<validators>] ...
   -- : Do not treat any remaining argument as a switch (at this level)
  Multiple single-letter switches can be combined after one `-'; for
   example: `-h-' is the same as `-h --'
+```
+
+If you're running on Linux you could setup a `systemd` service like this:
+
+*/etc/systemd/system/validator-monitor.service*
+```
+[Unit]
+Description=ETH2 Beacon Chain validator monitor
+
+[Service]
+ExecStart=/home/michael/repos/validator-monitor/monitor \
+  --chat-id "12345" \
+  --telegram-key "12345:abcd" \
+  --forever \
+  987 654 321
+User=michael
+Group=michael
+Restart=always
+
+[Install]
+WantedBy=default.target
 ```
