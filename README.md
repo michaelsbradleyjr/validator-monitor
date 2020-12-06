@@ -88,6 +88,11 @@ $ sudo systemctl enable validator-monitor --now
 $ systemctl status validator-monitor
 ```
 
+The free-tier [Beaconcha.in ETH2 API](https://beaconcha.in/api/v1/docs/index.html)
+has a limit of 30000 requests per month. When the monitor is run with
+`--forever` it will execute 3 requests every 6 minutes, totaling at most 22320
+requests per month, so it should be okay.
+
 ## Telegram bot setup
 
 In the Telegram app, create a new bot by sending the `/newbot` command to
