@@ -10,7 +10,7 @@
 (define (get-previous-epoch)
   (displayln (format "~a: ~a"
                      (date->string (current-date) #t)
-                     "Fetching the previous epoch number"))
+                     "Fetching previous epoch number"))
   (let* ([res (response-json (get "https://beaconcha.in/api/v1/epoch/latest"))]
          [latest-epoch (foldl (λ (key hash) (hash-ref hash key))
                               res
