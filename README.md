@@ -30,7 +30,7 @@ Install `monitor.rkt`'s dependencies with `raco`:
 $ raco pkg install control http-easy nested-hash
 ```
 
-Compile into a standalone `monitor` executable:
+Compile `monitor.rkt` into a standalone `monitor` executable and run it:
 ```
 $ raco exe --orig-exe monitor.rkt
 $ ./monitor --chat-id "12345" \
