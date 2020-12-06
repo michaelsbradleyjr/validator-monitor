@@ -86,6 +86,7 @@
 (define chat-id (make-parameter ""))
 (define telegram-key (make-parameter ""))
 (define forever (make-parameter #f))
+(define line-buffering (make-parameter #f))
 
 (command-line
  #:program "monitor"
@@ -99,6 +100,8 @@
                      (telegram-key key)]
  [("--forever") "monitor every 6 minutes indefinitely"
                 (forever #t)]
+ [("--line") "enable line buffering (enabled by default when attached to terminal)"
+             (line-buffering #t)]
  #:args validators ; one or more validator indices separated by spaces
  (cond
   [(equal? (chat-id) "")
@@ -111,6 +114,7 @@
    (displayln (format "~a: ~a"
                       (date->string (current-date) #t)
                       "Starting monitor"))
+   (when (line-buffering) (file-stream-buffer-mode (current-output-port) 'line))
    (if (forever)
        (let loop () ; run indefinitely
          ; any exceptions that represent errors will be caught and displayed

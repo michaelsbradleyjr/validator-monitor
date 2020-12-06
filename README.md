@@ -74,6 +74,7 @@ ExecStart=/home/michael/repos/validator-monitor/monitor \
   --chat-id "12345" \
   --telegram-key "11111:abcd" \
   --forever \
+  --line \
   9999 10202
 StandardOutput=append:/home/michael/repos/validator-monitor/monitor.log
 StandardError=append:/home/michael/repos/validator-monitor/monitor.log
