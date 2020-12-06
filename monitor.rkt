@@ -57,32 +57,46 @@
                 telegram-key)
         #:json (hasheq 'chat_id chat-id
                        'disable_web_page_preview 1
-                       'text message)))
+                       'text message
+                       'parse_mode "MarkdownV2")))
 
 (define missed-message "Validator ~a missed an attestation at slot ~a in epoch ~a")
 
+(define missed-message-telegram "⚠️ Validator [~a](https://beaconcha.in/validator/~a#attestations) missed an attestation at slot [~a](https://beaconcha.in/block/~a) in epoch [~a](https://beaconcha.in/epoch/~a)")
+
 (define failed-message "Validator ~a failed to make a block proposal at slot ~a in epoch ~a")
+
+(define failed-message-telegram "💥 Validator [~a](https://beaconcha.in/validator/~a#blocks) failed to make a block proposal at slot [~a](https://beaconcha.in/block/~a) in epoch [~a](https://beaconcha.in/epoch/~a)")
 
 (define (monitor validators chat-id telegram-key)
   (let* ([epoch (get-previous-epoch)]
          [missed-attestations (get-missed-attestations epoch validators)]
          [failed-proposals (get-failed-proposals epoch validators)]
-         [send (λ (validator-slot-pair message)
+         [send (λ (validator-slot-pair console-message telegram-message)
                  (let* ([validator (car validator-slot-pair)]
                         [slot (cdr validator-slot-pair)]
-                        [message (format message validator slot epoch)])
+                        [console-message (format console-message
+                                                 validator
+                                                 slot
+                                                 epoch)]
+                        [telegram-message (format telegram-message
+                                                  validator validator
+                                                  slot slot
+                                                  epoch epoch)])
                    (displayln (format "~a: ~a"
                                       (date->string (current-date) #t)
-                                      message))
-                   (telegram-send message chat-id telegram-key)))])
+                                      console-message))
+                   (telegram-send telegram-message chat-id telegram-key)))])
     (if (or (not (equal? missed-attestations '()))
             (not (equal? failed-proposals '())))
       (begin
        (displayln (format "~a: ~a"
                           (date->string (current-date) #t)
                           "Sending telegram messages"))
-       (for-each (λ (pair) (send pair missed-message)) missed-attestations)
-       (for-each (λ (pair) (send pair failed-message)) failed-proposals))
+       (for-each (λ (pair) (send pair missed-message missed-message-telegram))
+                 missed-attestations)
+       (for-each (λ (pair) (send pair failed-message failed-message-telegram))
+                 failed-proposals))
       (displayln (format "~a: ~a"
                          (date->string (current-date) #t)
                          "Nothing to report")))))
