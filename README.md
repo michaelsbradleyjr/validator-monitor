@@ -19,6 +19,7 @@ export PATH="/Applications/Racket/bin:${PATH}"
 There's a [PPA](https://launchpad.net/~plt/+archive/ubuntu/racket) available if
 you're running Ubuntu:
 ```
+# if add-apt-repository is missing install software-properties-common
 $ sudo add-apt-repository ppa:plt/racket
 $ sudo apt-get update
 $ sudo apt-get install racket
