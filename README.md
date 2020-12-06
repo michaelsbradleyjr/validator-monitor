@@ -77,6 +77,6 @@ WantedBy=default.target
 Then run:
 ```
 $ sudo systemctl daemon-reload
-$ systemctl enable validator-monitor --now
+$ sudo systemctl enable validator-monitor --now
 $ systemctl status validator-monitor
 ```
