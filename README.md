@@ -25,9 +25,9 @@ $ sudo apt-get update
 $ sudo apt-get install racket
 ```
 
-Install `monitor.rkt`'s dependencies with `raco`:
+Install `monitor.rkt`'s one dependency with [`raco`](https://docs.racket-lang.org/raco/):
 ```
-$ raco pkg install control http-easy nested-hash
+$ raco pkg install http-easy
 ```
 
 Compile `monitor.rkt` into a standalone `monitor` executable and run it:
