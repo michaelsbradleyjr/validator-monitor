@@ -55,7 +55,7 @@
 
 (define missed-message "Validator ~a missed an attestation at slot ~a in epoch ~a")
 
-(define failed-message "Validator ~a failed a block proposal at slot ~a in epoch ~a")
+(define failed-message "Validator ~a failed when making a block proposal at slot ~a in epoch ~a")
 
 (define (monitor validators chat-id telegram-key)
   (let* ([epoch (get-previous-epoch)]
