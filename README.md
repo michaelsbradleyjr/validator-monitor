@@ -1,4 +1,11 @@
-# How to use it?
+# validator-monitor
+
+A tool for monitoring ETH2 Beacon Chain validators.
+
+Relies on the free-tier [Beaconcha.in ETH2 API](https://beaconcha.in/api/v1/docs/index.html)
+and the [Telegram Bot API](https://core.telegram.org/bots/api).
+
+## Setup and usage
 
 Install [Racket](https://download.racket-lang.org/) and make its binaries
 available on your `PATH`, e.g. on macOS:
@@ -80,3 +87,20 @@ $ sudo systemctl daemon-reload
 $ sudo systemctl enable validator-monitor --now
 $ systemctl status validator-monitor
 ```
+
+## Telegram bot setup
+
+In the Telegram app, create a new bot by sending the `/newbot` command to
+*@BotFather*. Provide a name and username for your bot and you'll receive a
+token to access the API.
+
+Send a message to your bot in Telegram, and then run this command in a terminal:
+```
+$ curl "https://api.telegram.org/botYOUR_KEY_GOES_HERE/getUpdates"
+```
+Extract the chat id from the response. If the response failed or did not
+contain a chat id, try again after a couple of minutes.
+
+## Credit
+
+Heavily inspired by a colleague's [related work](https://gist.github.com/richard-ramos/5ae07f56cd5d4e1441e872bf0a60c9b4).
