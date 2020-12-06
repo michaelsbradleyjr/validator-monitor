@@ -56,7 +56,7 @@ monitor [ <option> ... ] [<validators>] ...
 
 If you're running on Linux you could setup a `systemd` service like this:
 
-*/etc/systemd/system/validator-monitor.service*
+In */etc/systemd/system/validator-monitor.service*
 ```
 [Unit]
 Description=ETH2 Beacon Chain validator monitor
@@ -73,4 +73,10 @@ Restart=always
 
 [Install]
 WantedBy=default.target
+```
+Then run:
+```
+$ sudo systemctl daemon-reload
+$ systemctl enable validator-monitor --now
+$ systemctl status validator-monitor
 ```
