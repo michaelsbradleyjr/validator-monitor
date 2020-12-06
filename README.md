@@ -108,8 +108,8 @@ Send a message to your bot in Telegram, and then run this command in a terminal:
 ```
 $ curl "https://api.telegram.org/botYOUR_KEY_GOES_HERE/getUpdates"
 ```
-Extract the chat id from the response. If the response failed or did not
-contain a chat id, try again after a couple of minutes.
+Extract the chat id from the response. If the request failed or the response
+did not contain a chat id, try again after a couple of minutes.
 
 ## Credit
 
