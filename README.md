@@ -36,7 +36,7 @@ $ raco exe --orig-exe monitor.rkt
 $ ./monitor --chat-id "12345" \
             --telegram-key "11111:abcd" \
             --forever \
-            987 654 321
+            9999 10202
 ```
 
 Or run it via `racket`:
@@ -44,7 +44,7 @@ Or run it via `racket`:
 $ racket monitor.rkt --chat-id "12345" \
                      --telegram-key "11111:abcd" \
                      --forever \
-                     987 654 321
+                     9999 10202
 ```
 
 It includes `--help` output:
@@ -74,7 +74,9 @@ ExecStart=/home/michael/repos/validator-monitor/monitor \
   --chat-id "12345" \
   --telegram-key "11111:abcd" \
   --forever \
-  987 654 321
+  9999 10202
+StandardOutput=append:/home/michael/repos/validator-monitor/monitor.log
+StandardError=append:/home/michael/repos/validator-monitor/monitor.log
 User=michael
 Group=michael
 Restart=always
