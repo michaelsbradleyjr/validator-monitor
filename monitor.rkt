@@ -7,10 +7,13 @@
 
 (date-display-format 'rfc2822)
 
-(define (get-previous-epoch)
+(define (log message)
   (displayln (format "~a: ~a"
                      (date->string (current-date) #t)
-                     "Fetching previous epoch number"))
+                     message)))
+
+(define (get-previous-epoch)
+  (log "Fetching previous epoch number")
   (let* ([res (response-json (get "https://beaconcha.in/api/v1/epoch/latest"))]
          [latest-epoch (foldl (λ (key hash) (hash-ref hash key))
                               res
@@ -18,9 +21,7 @@
     (- latest-epoch 1)))
 
 (define (get-missed-attestations epoch validators)
-  (displayln (format "~a: ~a"
-                     (date->string (current-date) #t)
-                     "Checking for missed attestations"))
+  (log "Checking for missed attestations")
   (let* ([res (response-json (get (format "https://beaconcha.in/api/v1/validator/~a/attestations"
                                           (string-join validators ","))))]
          [attestations (hash-ref res 'data)])
@@ -35,9 +36,7 @@
            attestations)))
 
 (define (get-failed-proposals epoch validators)
-  (displayln (format "~a: ~a"
-                     (date->string (current-date) #t)
-                     "Checking for failed block proposals"))
+  (log "Checking for failed block proposals")
   (let* ([res (response-json (get (format "https://beaconcha.in/api/v1/validator/~a/proposals"
                                           (string-join validators ","))))]
          [data (hash-ref res 'data)]
@@ -83,23 +82,23 @@
                                                   validator validator
                                                   slot slot
                                                   epoch epoch)])
-                   (displayln (format "~a: ~a"
-                                      (date->string (current-date) #t)
-                                      console-message))
-                   (telegram-send telegram-message chat-id telegram-key)))])
+                   (log console-message)
+                   (telegram-send telegram-message
+                                  chat-id
+                                  telegram-key)))])
     (if (or (not (equal? missed-attestations '()))
             (not (equal? failed-proposals '())))
-      (begin
-       (displayln (format "~a: ~a"
-                          (date->string (current-date) #t)
-                          "Sending telegram messages"))
-       (for-each (λ (pair) (send pair missed-message missed-message-telegram))
-                 missed-attestations)
-       (for-each (λ (pair) (send pair failed-message failed-message-telegram))
-                 failed-proposals))
-      (displayln (format "~a: ~a"
-                         (date->string (current-date) #t)
-                         "Nothing to report")))))
+        (begin
+          (log "Sending telegram messages")
+          (for-each (λ (pair) (send pair
+                                    missed-message
+                                    missed-message-telegram))
+                    missed-attestations)
+          (for-each (λ (pair) (send pair
+                                    failed-message
+                                    failed-message-telegram))
+                    failed-proposals))
+        (log "Nothing to report"))))
 
 (define chat-id (make-parameter ""))
 (define telegram-key (make-parameter ""))
@@ -111,15 +110,15 @@
  #:usage-help "for <validators> supply one or more validator indices separated by spaces"
  #:once-each
  [("--chat-id") id ; takes one argument
-                "(required) id of telegram chat between yourself and your bot"
-                (chat-id id)]
+  "(required) id of telegram chat between yourself and your bot"
+  (chat-id id)]
  [("--telegram-key") key ; takes one argument
-                     "(required) api key for your telegram bot"
-                     (telegram-key key)]
+  "(required) api key for your telegram bot"
+  (telegram-key key)]
  [("--forever") "monitor every 6 minutes indefinitely"
-                (forever #t)]
+  (forever #t)]
  [("--line") "enable line buffering (enabled by default when attached to terminal)"
-             (line-buffering #t)]
+  (line-buffering #t)]
  #:args validators ; one or more validator indices separated by spaces
  (cond
   [(equal? (chat-id) "")
@@ -130,19 +129,15 @@
    (error "Error: at least one validator index must be supplied")])
  (let ([run-monitor (λ () (monitor validators (chat-id) (telegram-key)))])
    (when (line-buffering) (file-stream-buffer-mode (current-output-port) 'line))
-   (displayln (format "~a: ~a"
-                      (date->string (current-date) #t)
-                      "Starting monitor"))
+   (log "Starting monitor")
    (if (forever)
        (let loop () ; run indefinitely
          (thread ; run monitor in a separate thread to minimize timer drift
-          ; any exceptions that represent errors will be caught and displayed
-          ; then the loop will continue to run
+          ; exceptions representing errors will be caught and displayed without
+          ; interrupting the loop
           (λ () (with-handlers ([exn:fail? (λ (v) (displayln v))]) (run-monitor))))
          (sleep 360) ; sleep for 6 minutes before running monitor again
          (loop))
        (begin
          (run-monitor)
-         (displayln (format "~a: ~a"
-                            (date->string (current-date) #t)
-                            "Done"))))))
+         (log "Done")))))
