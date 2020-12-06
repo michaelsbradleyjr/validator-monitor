@@ -56,6 +56,7 @@ monitor [ <option> ... ] [<validators>] ...
   --chat-id <id> : (required) id of telegram chat between yourself and your bot
   --telegram-key <key> : (required) api key for your telegram bot
   --forever : monitor every 6 minutes indefinitely
+  --line : enable line buffering (enabled by default when attached to terminal)
   --help, -h : Show this help
   -- : Do not treat any remaining argument as a switch (at this level)
  Multiple single-letter switches can be combined after one `-'; for
